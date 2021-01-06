@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+
+      table,th,td{
+        border: 1px solid black;
+      }
+      #tableScroll
+      {
+        height: 350px;
+        width: 1000px;
+        overflow-x: scroll;
+        overflow-y: scroll;
+      }
+      #statusScroll
+      {
+        height: 300px;
+        width: 1000px;
+        overflow-x: scroll;
+        overflow-y: scroll;
+      }
+      #fileLogScroll
+      {
+        height: 240px;
+        width: 1000px;
+        overflow-x: scroll;
+        overflow-y: scroll;
+      }
+      div.hidden
+      {
+        display: none;
+      }
+      label{
+
+          float: left;
+          clear: left;
+          width: 120px;
+          text-align: left;
+      }
+
+    </style>
+
+    <title>iCal Manager</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="CHANGE ME">
+    <meta name="keywords" content="CHANGE ME">
+    <meta name="author" content="CHANGE ME">
+    <!-- Load jquery, bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <!-- Custom CSS End -->
+</head>
+<body>
+
+ <!-- **********************************STATUS PANEL****************************-->
+<div id = "statusScroll">
+    <table id = "StatusPanel" class = "table" align ="center">
+      <h2 align = "center"> Status Panel </h2>
+      <thead align = "center"> </thead>
+
+      <tbody align = "center">
+        <tr>
+        </tr>
+      </tbody>
+    </table>
+</div>
+<div>
+  <button id = "clearButton"> Clear </button>
+</div>
+<hr>
+ <!-- **********************************FILE LOG PANEL****************************-->
+ <div id = "fileLogScroll">
+    <table id = "FileLogPanel" class = "table" align = "center">
+      <h2 align = "center"> File Log Panel </h2>
+      <thead align = "center">
+        <tr>
+          <th> File Name </th>
+          <th> Version </th>
+          <th> Product ID </th>
+          <th> Number of Events </th>
+          <th> Number of Properties </th>
+        </tr>
+      </thead>
+
+      <tbody align = "center">
+        <tr>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <hr>
+
+<!-- **********************SELECT FILE LIST*********************************-->
+<h2 align = "center"> Calendar View Panel </h2>
+<div>
+  <select id = "selectFileList">
+    <option id = 'testOption'></option>
+  </select>
+
+</div>
+
+ <!-- **********************************CALENDAR VIEW PANEL****************************-->
+
+<div id = "tableScroll">
+    <table id = "CalViewPanel" class = "table" align = "center">
+      <thead align = "center">
+        <tr>
+          <th> Event No </th>
+          <th> Start date </th>
+          <th> Start time </th>
+          <th> UTC </th>
+          <th> Props </th>
+          <th> Show Properties </th>
+          <th> Alarms </th>
+          <th> Show Alarms </th>
+          <th> Summary </th>
+        </tr>
+      </thead>
+
+      <tbody id = 'previousBody' align = "center">
+        <tr>
+          <!-- event info-->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!--***********************************Upload Button****************************** -->
+    <hr>
+    <h4 align = "left"> Upload A File </h2>
+    <div>
+      <form id = 'myform' action="/upload" enctype=multipart/form-data method="POST" name = 'myForm'>
+        <input type = 'file' id = 'uploadFile' name = 'uploadFile'/>
+        <button type = 'submit' id = 'uploadButton' name = 'uploadButton' value = 'Upload'> Upload </button>
+      </form>
+    </div>
+
+    <!--***********************************CREATE CALENDAR****************************** -->
+    <hr>
+    <h2 align = "center"> Create Calendar </h2>
+  <div>
+    <form id = 'createCalForm'>
+        <label>Cal Name:</label>
+        <input id = "calFileName" type ="text" name ="calendarFileName" required></input><br>
+        <label>Cal Vers#:</label>
+        <input id = "calVersion" type ="text" name ="calendarVersion" required></input><br>
+        <label>Cal ProID:</label>
+        <input id = "calProdID" type ="text" name ="calendarProdID" required></input><br>
+        <label>Event UID:</label>
+        <input id = 'eventID' type ="text" name ="initEventUID" required></input><br>
+        <label>Create Date:</label>
+        <input id = 'initCD' type ="text" name ="initEventCreateDate" required></input><br>
+        <label>Create Time:</label>
+        <input id = 'initCT' type ="text" name ="initEventCreateTime" required></input><br>
+        <label>UTC(true/false):</label>
+        <input id = 'createUTC' type = "text" name = "initCreateUTC" required></input><br>
+        <label>Start Date:</label>
+        <input id = 'initSD' type ="text" name ="initEventStartDate" required></input><br>
+        <label>Start Time:</label>
+        <input id = 'initST' type ="text" name ="initEventStartTime" required></input><br>
+        <label>UTC (true/false):</label>
+        <input id = 'startUTC' type = "text" name = "initStartUTC" required> </input> <br>
+  <!--      <label>End Time:</label>
+        <input id = 'initET' type ="text" name ="initEventEndtime" required></input><br> -->
+        <label>Summary:</label>
+        <input id = 'initSummary' type ="text" name ="initEventSummary"></input><br>
+        <button id = "createCalButton" value = "Create Calendar" type="submit" name ="button">
+          Create Calendar
+        </button>
+    </form>
+  </div>
+
+    <!--*****************************************CREATE EVENT****************************** -->
+    <hr>
+    <h2 align = "center"> Add An Event </h2>
+  <div>
+    <form id = 'addEventForm'>
+      <label>Event UID:</label>
+      <input id = 'addEventUID' type ="text" name ="addEventUID" required></input><br>
+      <label>Create Date:</label>
+      <input id = 'addEventCD' type ="text" name ="addEventCreateDate" required></input><br>
+      <label>Create Time:</label>
+      <input id = 'addEventCT' type ="text" name ="addEventCreateTime" required></input><br>
+      <label>UTC(true/false):</label>
+      <input id = 'addCreateUTC' type = "text" name = "addCreateUTC" required></input><br>
+      <label>Start Date:</label>
+      <input id = 'addEventSD' type ="text" name ="addEventStartDate" required></input><br>
+      <label>Start Time:</label>
+      <input id = 'addEventST' type ="text" name ="addEventStartTime" required></input><br>
+      <label>UTC (true/false):</label>
+      <input id = 'addStartUTC' type = "text" name = "addStartUTC" required> </input> <br>
+      <label>Summary:</label>
+      <input id = 'addSummary' type ="text" name ="addEventSummary"></input><br>
+      <button id = "createEventButton" value = "Add Event" type="submit" name ="button">
+        Add Event
+      </button>
+    </form>
+  </div>
+    <hr>
+
+  <!--*************************DATABASE STUFF*************************************-->
+  <hr>
+  <br>
+  <h2 align = "center"> Database Features </h2>
+  <br>
+  <div>
+    <h5 align = 'left'> Database Authentication </h5>
+    <form id = 'loginScreen'>
+      <label> Username: </label>
+      <input id = 'userName' type = 'text' name = 'dbUserName' required></input><br>
+      <label> Password: </label>
+      <input id = 'userPass' type = 'text' name = 'dbPass' required> </input><br>
+      <label> Database Name:</label>
+      <input id = 'dbName' type = text name = 'databaseName' required> </input><br>
+      <button id = 'Login' value = 'dbLogin'type = 'submit' name = 'dbLogin'>
+        Login
+      </button>
+    </form>
+  </div>
+<hr>
+
+<!--******************************STORE ALL FILES******************************-->
+<div id = "storeAllFiles" class = "hidden">
+  <h6> Store All Files in the Database: </h6>
+  <button id = 'storeFiles' value = 'storage' name = 'dbStore'> Store Files </button>
+</div>
+<br>
+
+<!--******************************DISPLAY DB STATUS******************************-->
+<div id = "displayDBStatus" class = "hidden">
+  <h6> Display Summary of Database: </h6>
+  <button id = 'displayDB'> Display DB </button>
+</div>
+<br>
+
+<!--******************************CLEAR ALL DATA******************************-->
+<div id = "clearAllData" class = "hidden">
+  <h6> Clear All Data in the Database: </h6>
+  <button id = 'clearDB'> Clear DB </button>
+</div>
+<br>
+<hr>
+
+<!--******************************FIRST 3 SEARCH QUERIES******************************-->
+<h4 align = "center"> Query Options </h4>
+<div id = "ExecuteQuery1" >
+  <h6> Show Events by Date and Time: </h6>
+  <button id = 'exQue'> Display Events </button>
+</div>
+<br>
+
+<div id = "ExecuteQuery2" >
+  <h6> Show Events from File: </h6>
+    <form id = 'addEventForm'>
+      <label>File Name</label>
+      <input id = 'query2' type ="text" name ="showEventOfFile"></input> (please include ext.) <br>
+      <button id = "query2Button" value = "Show Events" type="submit" name ="button">
+        Show Events
+      </button>
+    </form>
+</div>
+<br>
+
+
+
+  <!--*****************************QUERY TABLE**************************************-->
+<hr>
+<div id = "QueryTable">
+   <table id = "executeQueryTable" class = "table" align = "center">
+     <h4 align = "center"> Query Results: </h4>
+     <thead align = "center">
+       <tr>
+
+       </tr>
+     </thead>
+
+     <tbody align = "center">
+       <tr>
+       </tr>
+     </tbody>
+   </table>
+ </div>
+ <hr>
+
+  <!--*****************************FILE TABLE**************************************-->
+<div>
+  <h3 align = 'center'> FILE Table </h5>
+    <table id = "FILE" class = "table" align = "center">
+
+    </table>
+
+</div>
+<hr>
+
+
+
+
+
+
+  <!--*****************************EVENT TABLE*************************************-->
+  <div>
+    <h3 align = 'center'> EVENT Table </h5>
+      <table id = "EVENT" class = "table" align = "center">
+
+      </table>
+
+  </div>
+  <hr>
+
+
+
+
+
+
+
+  <!--**************************** ALARM TABLE*************************************-->
+  <div>
+    <h3 align = 'center'> ALARM Table </h5>
+      <table id = "ALARM" class = "table" align = "center">
+
+      </table>
+
+  </div>
+  <hr>
+
+
+  <!--****************************************************************************-->
+
+
+
+
+
+
+
+    <!-- Leave me at the bottom of body -->
+    <script src="/index.js"></script>
+
+</body>
+</html>
